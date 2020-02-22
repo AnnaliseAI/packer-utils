@@ -1,4 +1,4 @@
-NAME='terraform-utils'
+NAME='packer-utils'
 DOCKERHUB_NAMESPACE='annaliseai'
 
 build:
