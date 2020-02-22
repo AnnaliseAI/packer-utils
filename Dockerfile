@@ -1,4 +1,4 @@
-FROM debian:buster-slim
+FROM ubuntu:bionic
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -19,6 +19,24 @@ RUN PACKER=$(curl -s https://checkpoint-api.hashicorp.com/v1/check/packer | jq -
   mv /tmp/packer /usr/bin/packer && \
   chmod +x /usr/bin/packer
 
+FROM ubuntu:bionic
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update -y && \
+  apt-get install \
+  ca-certificates \
+  jq \
+  python3 \
+  python3-pip \
+  python3-setuptools \
+  python3-wheel \
+  --no-install-recommends -y
+
+RUN pip3 install awscli -q
+
+COPY --from=0 /usr/bin/packer /usr/bin/packer
+
 WORKDIR /app
 
-CMD [ "/bin/bash" ]
+ENTRYPOINT [ "packer" ]
